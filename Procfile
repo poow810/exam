@@ -1,1 +1,1 @@
-web: java -jar example.jar
+web: java -jar demo.jar
