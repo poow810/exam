@@ -1,1 +1,1 @@
-web: java -jar demo.jar
+web: appstart
