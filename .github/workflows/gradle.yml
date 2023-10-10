@@ -34,34 +34,34 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 환경별 yml 파일 생성(1) - application.yml
-      - name: make application.yml
+      # 환경별 yml 파일 생성(1) - application.properties
+      - name: make application.properties
         if: |
           contains(github.ref, 'main') ||
           contains(github.ref, 'develop')
         run: |
           mkdir ./src/main/resources # resources 폴더 생성
           cd ./src/main/resources # resources 폴더로 이동
-          touch ./application.yml # application.yml 생성
-          echo "${{ secrets.YML }}" > ./application.yml # github actions에서 설정한 값을 application.yml 파일에 쓰기
+          touch ./application.properties # application.properties 생성
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties # github actions에서 설정한 값을 application.properties 파일에 쓰기
         shell: bash
 
       # 환경별 yml 파일 생성(2) - dev
-      - name: make application-dev.yml
+      - name: make application-dev.properties
         if: contains(github.ref, 'develop')
         run: |
           cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.YML_DEV }}" > ./application-dev.yml
+          touch ./application-dev.properties
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
         shell: bash
 
       # 환경별 yml 파일 생성(3) - prod
-      - name: make application-prod.yml
+      - name: make application-prod.properties
         if: contains(github.ref, 'main')
         run: |
           cd ./src/main/resources
-          touch ./application-prod.yml
-          echo "${{ secrets.YML_PROD }}" > ./application-prod.yml
+          touch ./application-prod.properties
+          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
         shell: bash
 
       # gradle build
