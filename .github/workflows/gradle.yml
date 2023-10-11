@@ -20,16 +20,16 @@ jobs:
 
     steps:
       # JDK setting - github actions에서 사용할 JDK 설정
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'temurin'
 
       # gradle caching - 빌드 시간 향상
       - name: Gradle Caching
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -103,7 +103,7 @@ jobs:
 
       # S3에 zip 파일 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip --source .
+        run: aws s3 cp --region ap-northeast-2 deploy/$PROJECT_NAME.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$PROJECT_NAME.zip
 
       # CodeDeploy에 배포 요청
       - name: Code Deploy
