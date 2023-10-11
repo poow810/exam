@@ -4,9 +4,16 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/app # 인스턴스에서 파일이 저장될 위치
+    overwrite: yes
+
+permissions: # CodeDeploy에서 EC2 서버로 넘겨 준 파일들은 모두 ec2-user 권한을 가진다
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
 
 hooks:
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 60
-      runas: ubuntu
+      runas: ec2-user
