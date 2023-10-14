@@ -5,7 +5,7 @@ name: CI/CD using Github Actions & AWS CodeDeploy
 # main이나 develop 브랜치에 push가 되었을 때 실행
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "developBE", "releaseBE" ]
 
 permissions:
   id-token: write
@@ -35,34 +35,34 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      # 환경별 yml 파일 생성(1) - application.properties
-      - name: make application.properties
+      # 환경별 yml 파일 생성(1) - application.yml
+      - name: make application.yml
         if: |
           contains(github.ref, 'main') ||
           contains(github.ref, 'develop')
         run: |
           mkdir ./src/main/resources # resources 폴더 생성
           cd ./src/main/resources # resources 폴더로 이동
-          touch ./application.properties # application.properties 생성
-          echo "${{ secrets.PROPERTIES }}" > ./application.properties # github actions에서 설정한 값을 application.properties 파일에 쓰기
+          touch ./application.yml # application.yml 생성
+          echo "${{ secrets.PROPERTIES }}" > ./application.yml # github actions에서 설정한 값을 application.yml 파일에 쓰기
         shell: bash
 
       # 환경별 yml 파일 생성(2) - dev
-      - name: make application-dev.properties
-        if: contains(github.ref, 'develop')
+      - name: make application-dev.yml
+        if: contains(github.ref, 'developBE')
         run: |
           cd ./src/main/resources
-          touch ./application-dev.properties
-          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
+          touch ./application-dev.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
         shell: bash
 
       # 환경별 yml 파일 생성(3) - prod
-      - name: make application-prod.properties
-        if: contains(github.ref, 'main')
+      - name: make application-prod.yml
+        if: contains(github.ref, 'releaseBE')
         run: |
           cd ./src/main/resources
-          touch ./application-prod.properties
-          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.properties
+          touch ./application-prod.yml
+          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
